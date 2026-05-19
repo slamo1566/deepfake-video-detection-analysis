@@ -25,6 +25,10 @@ import shutil
 import random
 import cv2
 from pathlib import Path
+
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from src.config import (
     DATASET_DIR,
     DATASET_EXTRACT_DIR,

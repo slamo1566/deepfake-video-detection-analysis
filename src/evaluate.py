@@ -17,6 +17,10 @@ import argparse
 import json
 import numpy as np
 from pathlib import Path
+
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from src.config import TEST_DIR, IMG_SIZE, BATCH_SIZE, EVALUATION_PATH, CONFUSION_MATRIX_PATH, CLASSIFICATION_REPORT_PATH

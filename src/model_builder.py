@@ -13,6 +13,10 @@ Each model is built with:
     - Dense output layer with sigmoid (binary classification)
 """
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from tensorflow.keras.applications import EfficientNetB0, Xception, MobileNetV2
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
 from tensorflow.keras.models import Sequential
