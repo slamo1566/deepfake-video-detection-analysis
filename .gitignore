@@ -17,10 +17,9 @@ env/
 *.swp
 *.swo
 
-# Dataset (do NOT push images)
-dataset/train/
-dataset/val/
-dataset/test/
+# Dataset (do NOT push images or videos)
+dataset/
+dataset_extracted/
 *.zip
 *.rar
 *.tar.gz

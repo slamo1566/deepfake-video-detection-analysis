@@ -33,6 +33,12 @@ CLASS_LABELS = ["real", "fake"]
 AVAILABLE_MODELS = ["efficientnet", "xception", "mobilenet"]
 DEFAULT_MODEL = "efficientnet"
 
+VIDEOS_DIR = DATASET_DIR / "videos"
+VIDEOS_REAL_DIR = VIDEOS_DIR / "real"
+VIDEOS_FAKE_DIR = VIDEOS_DIR / "fake"
+
+FRAME_EXTRACT_RATE = 10
+
 CHECKPOINT_PATH = MODELS_DIR / "{model_name}_best.h5"
 FINAL_MODEL_PATH = MODELS_DIR / "{model_name}_final.h5"
 HISTORY_PATH = RESULTS_DIR / "{model_name}_history.json"
