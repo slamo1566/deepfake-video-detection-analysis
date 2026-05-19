@@ -1,9 +1,3 @@
-Conversation avec Gemini
-
-this Analyse et Détection des Deepfakes en Vidéographie in english
-
-The English translation for "Analyse et Détection des Deepfakes en Vidéographie" is:
-
 "Analysis and Detection of Deepfakes in Videography"
 Key Term Breakdown
 
