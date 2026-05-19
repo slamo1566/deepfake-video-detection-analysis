@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.so
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Dataset (do NOT push images)
+dataset/train/
+dataset/val/
+dataset/test/
+*.zip
+*.rar
+*.tar.gz
+
+# Models (large binary files, do not push unless small)
+models/*.h5
+models/*.keras
+models/*.pth
+models/*.pt
+
+# Results (plots, CSVs, logs)
+results/
+*.png
+*.jpg
+*.jpeg
+*.csv
+
+# Notebooks checkpoints
+notebooks/.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
