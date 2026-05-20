@@ -63,8 +63,6 @@ The model is trained and evaluated using the following benchmark dataset:
 
 ---
 
-## 🤖 AI Model — Member 4
-
 ### Project structure
 
 ```
