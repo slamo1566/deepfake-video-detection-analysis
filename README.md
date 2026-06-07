@@ -66,30 +66,49 @@ The model is trained and evaluated using the following benchmark dataset:
 ### Project structure
 
 ```
+### Project structure
+
+```text
 deepfake-ai-model/
 ├── dataset/                   # Dataset (not pushed to git)
 │   ├── videos/real/           # Original DFD videos
 │   ├── videos/fake/           # Manipulated DFD videos
 │   ├── train/real/            # Training face images (real)
 │   ├── train/fake/            # Training face images (fake)
-│   ├── val/real/              # Validation face images
-│   ├── val/fake/              # Validation face images
-│   ├── test/real/             # Test face images
-│   └── test/fake/             # Test face images
-├── models/                    # Saved .h5 model files
-├── results/                   # Plots, metrics, classification reports
-├── src/                       # Source code
-│   ├── config.py              # Paths & hyperparameters
-│   ├── prepare_dataset.py     # Extract zip, organize videos, extract frames & faces
-│   ├── model_builder.py       # EfficientNet / Xception / MobileNet builder
-│   ├── train.py               # Training loop with callbacks
-│   ├── evaluate.py            # Accuracy, precision, recall, F1, confusion matrix
-│   ├── predict.py             # Single image → {prediction, confidence}
-│   └── utils.py               # Plotting & metrics helpers
-├── notebooks/                 # Jupyter notebooks
+│   ├── val/real/             # Validation face images
+│   ├── val/fake/             # Validation face images
+│   ├── test/real/            # Test face images
+│   └── test/fake/            # Test face images
+│
+├── uploads/                  # Uploaded videos from the web interface
+├── extracted_frames/         # Frames extracted from uploaded videos
+├── cropped_faces/            # Faces detected and cropped from frames
+├── reports/                  # Generated analysis reports
+├── temp/                     # Temporary processing files
+│
+├── models/                   # Saved .h5 model files
+├── results/                  # Plots, metrics, classification reports
+│
+├── templates/                # Flask HTML templates
+│   ├── index.html            # Video upload interface
+│   └── success.html          # Upload result & metadata page
+│
+├── src/                      # Source code
+│   ├── config.py             # Paths & hyperparameters
+│   ├── prepare_dataset.py    # Extract zip, organize videos, extract frames & faces
+│   ├── model_builder.py      # EfficientNet / Xception / MobileNet builder
+│   ├── train.py              # Training loop with callbacks
+│   ├── evaluate.py           # Accuracy, precision, recall, F1, confusion matrix
+│   ├── predict.py            # Single image → {prediction, confidence}
+│   └── utils.py              # Plotting & metrics helpers
+│
+├── app.py                    # Flask application (upload & preprocessing module)
+├── notebooks/                # Jupyter notebooks
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+```
+
 ```
 
 ### Setup
