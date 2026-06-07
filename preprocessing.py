@@ -4,7 +4,6 @@ import os
 import shutil
 from face_detector import detect_faces
 
-# ── Configuration ──────────────────────────────────────────
 INPUT_DIR  = "extracted_frames"
 OUTPUT_DIR = "processed_faces"
 IMG_SIZE   = (224, 224)
@@ -12,7 +11,6 @@ IMG_SIZE   = (224, 224)
 TRAIN_RATIO = 0.70
 VAL_RATIO   = 0.15
 TEST_RATIO  = 0.15
-# ───────────────────────────────────────────────────────────
 
 
 def align_face(img, left_eye, right_eye):
@@ -59,16 +57,11 @@ def preprocess_face(img, face_info):
 
 
 def get_all_image_files(root_dir):
-    """
-    Parcourt TOUS les sous-dossiers récursivement.
-    Retourne liste de (chemin_complet, label) où label = 'fake' ou 'real'.
-    """
     image_files = []
     for dirpath, dirnames, filenames in os.walk(root_dir):
         for fname in filenames:
             if fname.lower().endswith(('.jpg', '.png', '.jpeg')):
                 full_path = os.path.join(dirpath, fname)
-                # Si "fake" apparaît n'importe où dans le chemin → fake
                 label = "fake" if "fake" in dirpath.lower() else "real"
                 image_files.append((full_path, fname, label))
     return image_files
@@ -77,7 +70,6 @@ def get_all_image_files(root_dir):
 def collect_all_faces(image_files):
     real_faces = []
     fake_faces = []
-
     for (img_path, fname, label) in image_files:
         faces, img = detect_faces(img_path)
         if not faces or img is None:
@@ -89,7 +81,6 @@ def collect_all_faces(image_files):
                 fake_faces.append((fname, processed))
             else:
                 real_faces.append((fname, processed))
-
     return real_faces, fake_faces
 
 
@@ -99,19 +90,16 @@ def split_and_save(faces_list, label):
     n = len(items)
     n_train = int(n * TRAIN_RATIO)
     n_val   = int(n * VAL_RATIO)
-
     splits = {
         "train": items[:n_train],
         "val":   items[n_train:n_train + n_val],
         "test":  items[n_train + n_val:]
     }
-
     for split_name, split_items in splits.items():
         out_dir = os.path.join(OUTPUT_DIR, label, split_name)
         os.makedirs(out_dir, exist_ok=True)
         for (fname, face) in split_items:
             cv2.imwrite(os.path.join(out_dir, fname), (face * 255).astype(np.uint8))
-
     return {k: len(v) for k, v in splits.items()}
 
 
@@ -151,4 +139,3 @@ def run_preprocessing():
 
 if __name__ == "__main__":
     run_preprocessing()
-    
