@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Upload Successful</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <style>
+
+        body {
+
+            background: #0f172a;
+
+            color: white;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            height: 100vh;
+
+            font-family: Arial;
+        }
+
+        .success-box {
+
+            background: rgba(255,255,255,0.08);
+
+            padding: 50px;
+
+            border-radius: 20px;
+
+            text-align: center;
+
+            width: 500px;
+        }
+
+        h1 {
+
+            color: #4ade80;
+
+            margin-bottom: 20px;
+        }
+
+        .filename {
+
+            color: #38bdf8;
+
+            font-size: 20px;
+
+            margin-top: 20px;
+        }
+
+        .btn-home {
+
+            margin-top: 30px;
+
+            padding: 12px 30px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background: #3b82f6;
+
+            color: white;
+
+            text-decoration: none;
+
+            display: inline-block;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="success-box">
+
+    <h1>
+         Upload Successful
+    </h1>
+
+    <p>
+        Your video was uploaded correctly.
+    </p>
+
+    <div class="filename">
+
+        {{ filename }}
+
+    </div>
+
+    <div style="margin-top:25px; text-align:left;">
+
+    <p>
+        <strong>Duration:</strong>
+        {{ duration }} seconds
+    </p>
+
+    <p>
+        <strong>Resolution:</strong>
+        {{ width }} x {{ height }}
+    </p>
+
+    <p>
+        <strong>FPS:</strong>
+        {{ fps }}
+    </p>
+
+    <p>
+        <strong>Approximate Frames:</strong>
+        {{ frame_count }}
+    </p>
+
+    <p>
+        <strong>File Size:</strong>
+        {{ file_size }} MB
+    </p>
+
+</div>
+
+    <a href="/"
+       class="btn-home">
+
+        Upload Another Video
+
+    </a>
+
+</div>
+
+</body>
+</html>

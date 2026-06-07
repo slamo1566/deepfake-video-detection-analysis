@@ -1,0 +1,38 @@
+Video: uploads/test.mp4
+Frames extracted: 0
+Execution time: 20.12 sec
+
+Video: uploads/test.mp4
+Frames extracted: 0
+Execution time: 24.28 sec
+
+Video: uploads/test.mp4
+Frames extracted: 0
+Execution time: 29.56 sec
+
+Video: uploads/test.mp4
+Frames extracted: 45
+Execution time: 21.81 sec
+
+Video: uploads/test.mp4
+Frames extracted: 45
+Execution time: 14.81 sec
+
+Video: uploads/test.mp4
+Frames extracted: 38
+Execution time: 24.14 sec
+
+Video: uploads/test.mp4
+Frames extracted: 38
+Execution time: 26.59 sec
+
+Video: uploads/test.mp4
+Frames extracted: 38
+Execution time: 25.07 sec
+
+Video: uploads/test.mp4
+Frames extracted: 38
+Execution time: 24.21 sec
+Errors: 0
+
+-------------------------
