@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Historique | Deepfake Detection{% endblock %}
+
+{% block content %}
+
+<section class="history-section">
+    <div class="container">
+
+        <div class="text-center mb-5">
+            <h1>Historique des analyses</h1>
+            <p class="text-muted">
+                Liste des vidéos déjà analysées par l’application.
+            </p>
+        </div>
+
+        <div class="history-card">
+            {% if analyses %}
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Vidéo</th>
+                                <th>Résultat</th>
+                                <th>Score</th>
+                                <th>Mode</th>
+                                <th>Détails</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for item in analyses %}
+                                <tr>
+                                    <td>{{ item.analysis_date }}</td>
+                                    <td>{{ item.video_name }}</td>
+
+                                    <td>
+                                        {% if item.prediction == "FAKE" %}
+                                            <span class="mini-badge fake">
+                                                FAKE
+                                            </span>
+                                        {% elif item.prediction == "REAL" %}
+                                            <span class="mini-badge real">
+                                                REAL
+                                            </span>
+                                        {% else %}
+                                            <span class="mini-badge unknown">
+                                                NON ANALYSABLE
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>{{ item.confidence }}%</td>
+
+                                    <td>
+                                        <span class="badge bg-secondary">
+                                            {{ item.mode }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <a
+                                            href="{{ url_for('result', analysis_id=item.analysis_id) }}"
+                                            class="btn btn-sm btn-outline-info"
+                                        >
+                                            Ouvrir
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="empty-history text-center">
+                    <h4>Aucune analyse enregistrée</h4>
+
+                    <p class="text-muted">
+                        Lancez une première analyse pour remplir l’historique.
+                    </p>
+
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        Analyser une vidéo
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

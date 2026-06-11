@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}Résultat | Deepfake Detection{% endblock %}
+
+{% block content %}
+
+<section class="result-section">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+                <div class="result-header text-center mb-4">
+                    <h1>Résultat de l’analyse</h1>
+                    <p class="text-muted">
+                        Vidéo analysée : {{ result.video_name }}
+                    </p>
+                </div>
+
+                <div class="result-card mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 text-center text-md-start">
+                            <p class="result-label">Prédiction finale</p>
+
+                            {% if result.prediction == "FAKE" %}
+                                <span class="prediction-badge fake">
+                                    FAKE
+                                </span>
+                            {% elif result.prediction == "REAL" %}
+                                <span class="prediction-badge real">
+                                    REAL
+                                </span>
+                            {% else %}
+                                <span class="prediction-badge unknown">
+                                    NON ANALYSABLE
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6 mt-4 mt-md-0">
+                            <p class="result-label">Score de confiance</p>
+
+                            <h2 class="confidence-value">
+                                {{ result.confidence }}%
+                            </h2>
+
+                            <div class="progress">
+                                <div
+                                    class="progress-bar"
+                                    style="width: {{ result.confidence }}%"
+                                >
+                                    {{ result.confidence }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if result.mode == "DEMO" %}
+                    <div class="alert alert-warning">
+                        Mode démonstration activé :
+                        le modèle IA final n’a pas été trouvé dans
+                        <strong>models/efficientnet_best.h5</strong>.
+                    </div>
+                {% endif %}
+
+                {% if result.model_message %}
+                    <div class="alert alert-info">
+                        {{ result.model_message }}
+                    </div>
+                {% endif %}
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h5>Probabilité REAL</h5>
+
+                            <div class="progress probability-progress">
+                                <div
+                                    class="progress-bar real-bar"
+                                    style="width: {{ result.real_probability }}%"
+                                >
+                                    {{ result.real_probability }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="info-card">
+                            <h5>Probabilité FAKE</h5>
+
+                            <div class="progress probability-progress">
+                                <div
+                                    class="progress-bar fake-bar"
+                                    style="width: {{ result.fake_probability }}%"
+                                >
+                                    {{ result.fake_probability }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card mb-4">
+                    <h4 class="mb-3">Métadonnées vidéo</h4>
+
+                    <div class="row g-3">
+                        <div class="col-md-3 col-6">
+                            <div class="metadata-box">
+                                <span>Durée</span>
+                                <strong>{{ result.metadata.duration }} s</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                            <div class="metadata-box">
+                                <span>Résolution</span>
+                                <strong>
+                                    {{ result.metadata.width }} x {{ result.metadata.height }}
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                            <div class="metadata-box">
+                                <span>FPS</span>
+                                <strong>{{ result.metadata.fps }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                            <div class="metadata-box">
+                                <span>Taille</span>
+                                <strong>{{ result.metadata.file_size }} MB</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">Frames suspectes</h4>
+
+                        <span class="badge bg-secondary">
+                            {{ result.suspect_frames | length }} frame(s)
+                        </span>
+                    </div>
+
+                    {% if result.suspect_frames %}
+                        <div class="row g-4">
+                            {% for frame in result.suspect_frames %}
+                                <div class="col-md-3 col-sm-6">
+                                    <div class="frame-card">
+                                        <img
+                                            src="{{ url_for('static', filename=frame.image_path) }}"
+                                            alt="Frame suspecte"
+                                            class="img-fluid"
+                                        >
+
+                                        <div class="frame-info">
+                                            <strong>
+                                                Frame {{ frame.frame_number }}
+                                            </strong>
+
+                                            {% if frame.score is not none %}
+                                                <span>
+                                                    Suspicion : {{ frame.score }}%
+                                                </span>
+                                            {% else %}
+                                                <span>
+                                                    Score indisponible
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">
+                            Aucune frame avec visage détecté.
+                        </p>
+                    {% endif %}
+                </div>
+
+                <div class="text-center">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        Nouvelle analyse
+                    </a>
+
+                    <a href="{{ url_for('history') }}" class="btn btn-outline-light ms-2">
+                        Voir l’historique
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

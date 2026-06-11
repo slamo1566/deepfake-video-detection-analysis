@@ -1,50 +1,27 @@
-# Python
 __pycache__/
-*.py[cod]
-*.egg-info/
-dist/
-build/
-*.so
+*.pyc
 
-# Virtual environment
 venv/
-env/
-.venv/
+.env
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+uploads/*
+!uploads/.gitkeep
 
-# Dataset (do NOT push images or videos)
-dataset/
-dataset_extracted/
-*.zip
-*.rar
-*.tar.gz
+reports/*
+!reports/.gitkeep
 
-# Models (large binary files, do not push unless small)
+temp/*
+!temp/.gitkeep
+
+extracted_frames/*
+!extracted_frames/.gitkeep
+
+cropped_faces/*
+!cropped_faces/.gitkeep
+
+static/results/*
+!static/results/.gitkeep
+
 models/*.h5
-models/*.keras
-models/*.pth
 models/*.pt
-
-# Results (plots, CSVs, logs)
-results/
-*.png
-*.jpg
-*.jpeg
-*.csv
-
-# Notebooks checkpoints
-notebooks/.ipynb_checkpoints/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-
-uploads/
+models/*.pth
