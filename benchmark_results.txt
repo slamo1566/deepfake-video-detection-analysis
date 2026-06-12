@@ -1,0 +1,12 @@
+Model                                          Accuracy  Precision   Recall  Correct
+------------------------------------------------------------------------------------
+model_84_acc_10_frames_final_data.pt              56.5%      54.1%    85.0%   113/200
+model_87_acc_20_frames_final_data.pt              61.0%      58.2%    78.0%   122/200
+model_89_acc_40_frames_final_data.pt              54.5%      53.0%    79.0%   109/200
+model_90_acc_20_frames_FF_data.pt                 36.5%      21.3%    10.0%    73/200
+model_90_acc_60_frames_final_data.pt              63.5%      70.1%    47.0%   127/200
+model_93_acc_100_frames_celeb_FF_data.pt          57.0%      58.5%    48.0%   114/200
+model_95_acc_40_frames_FF_data.pt                 49.0%      25.0%     1.0%    98/200
+model_97_acc_100_frames_FF_data.pt                50.5%      66.7%     2.0%   101/200
+model_97_acc_60_frames_FF_data.pt                 51.0%     100.0%     2.0%   102/200
+model_97_acc_80_frames_FF_data.pt                 52.0%      83.3%     5.0%   104/200

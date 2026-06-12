@@ -1,152 +1,182 @@
-# Analysis and Detection of Deepfakes in Videography
-*(Analyse et Détection des Deepfakes en Vidéographie)*
+# Deepfake Video Detection
+*Analysis and Detection of Deepfakes in Videography*
 
-This repository contains an automated system designed to detect and analyze Deepfakes in video content. By leveraging Artificial Intelligence and Deep Learning, the application processes input videos to identify facial manipulation anomalies and classify them as **REAL** or **FAKE**, providing an associated confidence score.
-
-> ⚠️ **Note:** This project focuses *exclusively* on deepfake detection and analysis. It does not include tools for generating or creating synthetic media.
+A web application that detects deepfake videos using deep learning. Upload a video and the system automatically extracts frames, detects faces, and classifies the video as **REAL** or **FAKE** with a confidence score.
 
 ---
 
-## 📌 Context & Problem Statement
-The rapid evolution of Deep Learning has enabled the creation of highly realistic Deepfakes using Generative Adversarial Networks (GANs), Auto-Encoders, and other image synthesis architectures. These manipulations have reached a level of realism where the human eye can no longer easily distinguish between authentic and falsified media.
+## How It Works
 
-This project addresses this issue by using computer vision and convolutional neural networks (CNNs) to automatically detect specific facial and structural anomalies, including:
-* Face texture inconsistencies
-* Blending defects and visual artifacts
-* Anomalies around the eyes and mouth
-* Lighting inconsistencies
-* Synthesis imperfections generated during face creation
-
----
-
-## 🏗️ System Architecture & Workflow
-The core of the system is a structured data processing pipeline that transforms raw video into individual face evaluations:
+The detection pipeline has 3 stages:
 
 ```
-Video Input ──> Frame Extraction ──> Face Detection & Cropping ──> Data Preprocessing ──> AI Model (CNN) ──> Classification
+Video ──► Frame Extraction ──► Face Detection ──► AI Model ──► REAL / FAKE + Confidence
 ```
 
-### Detailed Workflow Steps
+1. **Frame Extraction** — Samples up to 20 frames evenly spaced across the video using OpenCV.
+2. **Face Detection** — Detects and crops the face region from each frame using the `face_recognition` library (HOG-based detector).
+3. **AI Classification** — A pretrained **ResNeXt-50 + LSTM** model analyzes the sequence of face crops and outputs a final prediction with confidence percentage.
 
-1. **Video Ingestion:** Supports standard video formats like `.mp4`, `.avi`, and other compatible files.
-2. **Frame Extraction:** Converts videos into a series of static images (e.g., extracting one frame every 10 frames) to optimize performance and reduce computational complexity.
-3. **Face Detection & Extraction:** Isolates and crops the human face from each frame using detectors like MTCNN or Dlib to focus the analysis exclusively on the modified regions.
-4. **Data Preprocessing:** Standardizes the isolated face images to ensure model compatibility. This includes:
-   * Resizing images to a fixed 224x224 resolution.
-   * Pixel normalization.
-   * Face alignment and quality enhancement.
-5. **AI Analysis & Classification:** Preprocessed faces are fed into deep learning models (such as **EfficientNet** or **XceptionNet**) utilizing **Transfer Learning**. This pre-trained model approach ensures higher accuracy, faster training times, and lower GPU resource requirements.
-6. **Final Output:** The system aggregates individual frame analyses to display a final classification alongside a certainty percentage:
-   * *Example:* `Prediction: FAKE - Confidence: 92%`
-   * *Example:* `Prediction: REAL - Confidence: 87%`
+The LSTM processes frames as a sequence, capturing temporal inconsistencies that single-frame models would miss. This is key for detecting subtle deepfake artifacts that appear across multiple frames.
 
 ---
 
-## 🛠️ Technologies & Tools
-The project is built using a modern Python-based ecosystem:
-
-* **Core Language:** Python
-* **Video & Image Processing:** OpenCV, NumPy, Pandas
-* **Face Detection:** MTCNN, Dlib
-* **Deep Learning Frameworks:** TensorFlow / Keras, PyTorch
-* **User Interface:** Flask (Web Graphical Interface)
-
----
-
-## 📊 Dataset
-The model is trained and evaluated using the following benchmark dataset:
-
-* **[Deep Fake Detection (DFD) Entire Original Dataset](https://www.kaggle.com/datasets/sanikatiwarekar/deep-fake-detection-dfd-entire-original-dataset)** (via Kaggle)
-  * **Description:** A comprehensive video-based dataset downloaded from the official FaceForensics server.
-  * **Size:** ~3,400 video files in standard MP4 format.
-  * **Content:** Covers a balanced collection of both original and manipulated video sequences (REAL vs. FAKE annotations), specifically optimized for evaluating facial manipulation algorithms.
-
----
-
-### Project structure
+## Project Structure
 
 ```
-### Project structure
-
-```text
 deepfake-ai-model/
-├── dataset/                   # Dataset (not pushed to git)
-│   ├── videos/real/           # Original DFD videos
-│   ├── videos/fake/           # Manipulated DFD videos
-│   ├── train/real/            # Training face images (real)
-│   ├── train/fake/            # Training face images (fake)
-│   ├── val/real/             # Validation face images
-│   ├── val/fake/             # Validation face images
-│   ├── test/real/            # Test face images
-│   └── test/fake/            # Test face images
 │
-├── uploads/                  # Uploaded videos from the web interface
-├── extracted_frames/         # Frames extracted from uploaded videos
-├── cropped_faces/            # Faces detected and cropped from frames
-├── reports/                  # Generated analysis reports
-├── temp/                     # Temporary processing files
+├── app.py                    # Flask web application — entry point
+├── benchmark.py              # Benchmarks all 10 pretrained models on a test set
+├── preprocess.py             # Preprocesses videos into face tensors (run before benchmark)
 │
-├── models/                   # Saved .h5 model files
-├── results/                  # Plots, metrics, classification reports
+├── src/
+│   ├── predict_video.py      # Core prediction pipeline (video → REAL/FAKE)
+│   └── __init__.py
 │
-├── templates/                # Flask HTML templates
-│   ├── index.html            # Video upload interface
-│   └── success.html          # Upload result & metadata page
+├── templates/
+│   ├── index.html            # Upload page
+│   └── success.html          # Results page (shows prediction + confidence)
 │
-├── src/                      # Source code
-│   ├── config.py             # Paths & hyperparameters
-│   ├── prepare_dataset.py    # Extract zip, organize videos, extract frames & faces
-│   ├── model_builder.py      # EfficientNet / Xception / MobileNet builder
-│   ├── train.py              # Training loop with callbacks
-│   ├── evaluate.py           # Accuracy, precision, recall, F1, confusion matrix
-│   ├── predict.py            # Single image → {prediction, confidence}
-│   └── utils.py              # Plotting & metrics helpers
+├── models/
+│   └── Models/               # Pretrained .pt model files (download separately — see below)
 │
-├── app.py                    # Flask application (upload & preprocessing module)
-├── notebooks/                # Jupyter notebooks
+├── test_videos/              # 4 sample videos for demonstration
+│   ├── clearly_fake.mp4      # Deepfake detected with 100% confidence
+│   ├── subtle_fake.mp4       # Deepfake detected with ~50% confidence (hard case)
+│   ├── clearly_real.mp4      # Authentic video detected with 100% confidence
+│   └── subtle_real.mp4       # Authentic video detected with ~62% confidence (hard case)
+│
+├── uploads/                  # Videos uploaded via the web interface (auto-created)
 ├── requirements.txt
 ├── .gitignore
 └── README.md
 ```
 
+### File Descriptions
+
+| File | Purpose |
+|---|---|
+| `app.py` | Flask server — handles video upload, calls the prediction pipeline, renders results |
+| `src/predict_video.py` | The core module — loads the model, extracts frames, detects faces, runs inference |
+| `benchmark.py` | Evaluates all 10 pretrained models on a preprocessed dataset and prints an accuracy table |
+| `preprocess.py` | Reads videos, extracts face sequences, saves them as PyTorch tensors for fast benchmarking |
+| `templates/index.html` | Upload form where the user submits a video |
+| `templates/success.html` | Results page showing REAL/FAKE verdict, confidence bar, and video metadata |
+
+---
+
+## Model
+
+**Architecture:** ResNeXt-50 (CNN backbone) + LSTM (temporal sequence modeling)
+
+- The **ResNeXt-50** extracts a 2048-dimensional feature vector from each face crop
+- The **LSTM** processes the sequence of frame features and captures temporal patterns
+- Final **linear classifier** outputs REAL or FAKE probabilities
+
+**Pretrained model used:** `model_87_acc_20_frames_final_data.pt`
+- Trained on the FaceForensics++ dataset
+- 20 frames per video
+- **87% accuracy** on the original benchmark
+
+### Benchmark Results (on 200 FaceForensics++ videos)
+
+| Model | Frames | Accuracy | Precision | Recall | Correct |
+|---|---|---|---|---|---|
+| model_90_acc_60_frames_final_data | 60 | **63.5%** | 70.1% | 47.0% | 127/200 |
+| **model_87_acc_20_frames_final_data** ✅ | **20** | 61.0% | 58.2% | **78.0%** | 122/200 |
+| model_93_acc_100_frames_celeb_FF_data | 100 | 57.0% | 58.5% | 48.0% | 114/200 |
+| model_84_acc_10_frames_final_data | 10 | 56.5% | 54.1% | 85.0% | 113/200 |
+| model_89_acc_40_frames_final_data | 40 | 54.5% | 53.0% | 79.0% | 109/200 |
+| model_97_acc_80_frames_FF_data | 80 | 52.0% | 83.3% | 5.0% | 104/200 |
+| model_97_acc_60_frames_FF_data | 60 | 51.0% | 100.0% | 2.0% | 102/200 |
+| model_97_acc_100_frames_FF_data | 100 | 50.5% | 66.7% | 2.0% | 101/200 |
+| model_95_acc_40_frames_FF_data | 40 | 49.0% | 25.0% | 1.0% | 98/200 |
+| model_90_acc_20_frames_FF_data | 20 | 36.5% | 21.3% | 10.0% | 73/200 |
+
+> **Note:** Models suffixed `_FF_data` were trained exclusively on FaceForensics++ and perform poorly on DeepFakeDetection-style videos (low recall). Models suffixed `_final_data` generalize better across manipulation methods.
+
+We chose `model_87` for its **best balance of recall (78%) and speed (20 frames)** — it catches the most fake videos while being fast enough for real-time demo use.
+
+### Download the Model
+
+The pretrained models are too large for GitHub (217MB each). Download them from:
+
+**[Google Drive — All Models](https://drive.google.com/drive/folders/1UX8jXUXyEjhLLZ38tcgOwGsZ6XFSLDJ-)**
+
+Place the downloaded `.pt` files in:
+```
+models/Models/
 ```
 
-### Setup
+---
+
+## Installation
 
 ```bash
+git clone https://github.com/slamo1566/deepfake-video-detection-analysis.git
+cd deepfake-video-detection-analysis
+
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Usage
+Download the model (see above) and place it in `models/Models/`.
 
-**1. Prepare dataset** (organize videos from the DFD zip):
+---
+
+## Running the App
+
 ```bash
-python src/prepare_dataset.py --zip_path /path/to/archive.zip
+source venv/bin/activate
+python app.py
 ```
 
-**2. Train model** (after face images are in `dataset/train/val/test`):
-```bash
-python src/train.py --model efficientnet
-```
+Open your browser at **http://127.0.0.1:5000**, upload a video (`.mp4` or `.avi`), and the result appears automatically.
 
-**3. Evaluate model**:
-```bash
-python src/evaluate.py --model_path models/efficientnet_best.h5
-```
+---
 
-**4. Predict single image**:
-```bash
-python src/predict.py --image_path /path/to/face.jpg
-```
-
-### Flask integration
+## Flask Integration (for developers)
 
 ```python
-from src.predict import load_trained_model, predict_image
+from src.predict_video import load_model, predict_video
 
-model = load_trained_model("models/efficientnet_best.h5")
-result = predict_image(model, "uploads/face.jpg")
-# result == {"prediction": "fake", "confidence": 0.9876}
+model = load_model("models/Models/model_87_acc_20_frames_final_data.pt", sequence_length=20)
+result = predict_video(model, "path/to/video.mp4", sequence_length=20)
+# {"prediction": "FAKE", "confidence": 91.3, "frames_analyzed": 20}
 ```
+
+---
+
+## Dataset
+
+Evaluated on **FaceForensics++** (C23 compressed), which contains:
+- 1,000 original authentic videos
+- 1,000+ manipulated videos (DeepFakeDetection method)
+
+**Source:** [FaceForensics++ GitHub](https://github.com/ondyari/FaceForensics)
+
+---
+
+## Technologies
+
+| Layer | Technology |
+|---|---|
+| Deep Learning | PyTorch, ResNeXt-50, LSTM |
+| Face Detection | face_recognition (HOG + SVM) |
+| Video Processing | OpenCV |
+| Web Interface | Flask, Bootstrap 5 |
+| GPU Acceleration | CUDA (NVIDIA RTX 4060) |
+
+---
+
+## Team
+
+| Member | Role |
+|---|---|
+| Member 1 | Project Lead |
+| Member 2 | Frame Extraction |
+| Member 3 | Face Detection & Preprocessing |
+| **Member 4 (Slamo)** | **AI Model — Training, Evaluation, Pipeline** |
+| Member 5 | Flask Web Interface |

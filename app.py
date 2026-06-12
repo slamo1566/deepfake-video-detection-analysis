@@ -3,8 +3,14 @@ import os
 import cv2
 import uuid
 from werkzeug.utils import secure_filename
+from src.predict_video import load_model, predict_video
 
 app = Flask(__name__)
+
+# Load model once at startup
+MODEL_PATH = os.path.join("models", "Models", "model_87_acc_20_frames_final_data.pt")
+SEQ_LEN = 20
+model = load_model(MODEL_PATH, sequence_length=SEQ_LEN)
 
 # Project folders
 PROJECT_FOLDERS = [
@@ -152,30 +158,25 @@ def upload_video():
 
     video.release()
 
+    # Run deepfake detection
+    result = predict_video(model, filepath, sequence_length=SEQ_LEN)
+
     print("UPLOAD SUCCESSFUL")
     print(filepath)
+    print("Prediction:", result)
 
     return render_template(
-
         'success.html',
-
         filename=filename,
-
         fps=round(fps, 2),
-
         duration=round(duration, 2),
-
         width=width,
-
         height=height,
-
         frame_count=frame_count,
-
         file_size=file_size,
-
-        video_path=video_path,
-
-        frames_output_folder=frames_output_folder
+        prediction=result['prediction'],
+        confidence=result['confidence'],
+        frames_analyzed=result['frames_analyzed'],
     )
 # Large file error
 @app.errorhandler(413)

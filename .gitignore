@@ -17,34 +17,29 @@ env/
 *.swp
 *.swo
 
-# Dataset (do NOT push images or videos)
+# Dataset and large files — never push
 dataset/
-dataset_extracted/
+preprocessed/
 *.zip
 *.rar
 *.tar.gz
 
-# Models (large binary files, do not push unless small)
-models/*.h5
-models/*.keras
-models/*.pth
-models/*.pt
+# Pretrained models — too large for GitHub (>100MB each)
+# Download link in README
+models/Models/*.pt
 
-# Results (plots, CSVs, logs)
-results/
-*.png
-*.jpg
-*.jpeg
-*.csv
+# Runtime folders created automatically by the Flask app
+uploads/
+extracted_frames/
+cropped_faces/
+reports/
+temp/
 
-# Notebooks checkpoints
-notebooks/.ipynb_checkpoints/
+# Logs
+*.log
+preprocess_log.txt
+benchmark_log.txt
 
 # OS
 .DS_Store
 Thumbs.db
-
-# Logs
-*.log
-
-uploads/
