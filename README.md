@@ -171,12 +171,3 @@ Evaluated on **FaceForensics++** (C23 compressed), which contains:
 
 ---
 
-## Team
-
-| Member | Role |
-|---|---|
-| Member 1 | Project Lead |
-| Member 2 | Frame Extraction |
-| Member 3 | Face Detection & Preprocessing |
-| **Member 4 (Slamo)** | **AI Model — Training, Evaluation, Pipeline** |
-| Member 5 | Flask Web Interface |
